@@ -1,30 +1,17 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const sequelize = require('./Database/db');
-
-//creating a server
+const express = require("express");
+const cors = require("cors");
+const userRoutes = require("./routes/userRoute");
 
 const app = express();
+app.use(cors());
+app.use(express.json());
+require('dotenv').config(); // Load environment variables
+console.log('JWT_SECRET:', process.env.JWT_SECRET); // Verify it's loaded
 
-// creating a port
+// Mount the user routes
+app.use("/api", userRoutes);
 
-const port = 4000;
-
-//creating a middleware
-app.use(cors())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
-
-app.get(`/`,(req,res)=>{
-res.send("Welcome to the Page")
-})
-
-app.get(`/notice`,(req,res)=>{
-res.send("This is notice")
-})
-
-//running on port
-app.listen(port, ()=> {
-console.log(`server runnninig on .............port ${port}`)
-})
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
