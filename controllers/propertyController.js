@@ -24,7 +24,7 @@ exports.addProperty = async (req, res) => {
       images,
     });
 
-    res.status(201).json(newProperty); // Send the newly created property as a response
+    res.status(201).json(newProperty);
   } catch (err) {
     console.error('Error adding property:', err.message);
     res.status(500).json({ error: 'Server error' });
@@ -33,7 +33,7 @@ exports.addProperty = async (req, res) => {
 
 exports.getProperties = async (req, res) => {
   try {
-    // Fetch only properties where propertyType is 'sell'
+    // Assuming you have a where clause implementation in your Property model
     const forSaleProperties = await Property.findAll({
       where: {
         propertyType: 'sell',
@@ -44,10 +44,9 @@ exports.getProperties = async (req, res) => {
       return res.status(404).json({ message: 'No properties available for sale.' });
     }
 
-    res.status(200).json(forSaleProperties); // Send the properties that are for sale
+    res.status(200).json(forSaleProperties);
   } catch (err) {
     console.error("Error fetching properties:", err.message);
     res.status(500).json({ error: "Server error" });
   }
 };
-
