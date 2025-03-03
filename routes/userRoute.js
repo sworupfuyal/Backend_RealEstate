@@ -4,10 +4,7 @@ const router = express.Router();
 const pool = require('../database/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const userController = require("../controllers/userController");
-
-// Signup route with validation
 router.post(
   "/signup",
   [
@@ -33,30 +30,22 @@ router.post(
       const { email, password } = req.body;
   
       try {
-        // Check if user exists
         const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         if (user.rows.length === 0) {
           return res.status(400).json({ error: 'Invalid credentials' });
         }
-  
-        // Compare passwords
         const isMatch = await bcrypt.compare(password, user.rows[0].password);
         if (!isMatch) {
           return res.status(400).json({ error: 'Invalid credentials' });
         }
-  
-        // Generate JWT token
-        const payload = {
+          const payload = {
           user: {
             id: user.rows[0].id,
             name: user.rows[0].name,
             email: user.rows[0].email,
           },
         };
-  
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-  
-        // Return token and user data
         res.json({
           token,
           user: {
